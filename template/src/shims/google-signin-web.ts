@@ -6,12 +6,17 @@
 //   User
 // } from '../../node_modules/@react-native-google-signin/google-signin/src/types';
 
-// GAPI DEPRECATED: https://developers.google.com/identity/sign-in/web/sign-in
-
 import * as config from 'config.json';
 
 class GoogleSigninImpl {
   constructor() {
+    const handleCredentialResponse = (response: CredentialResponse) => {
+      console.log('Encoded JWT ID token: ', response);
+      if (response.credential != null) {
+        this.tokens.idToken = response.credential;
+      }
+      // this.tokens.accessToken = result.access_token;
+    };
     console.log('GoogleSignin loaded in web mode.');
 
     this.tokens = {
@@ -19,45 +24,40 @@ class GoogleSigninImpl {
       accessToken: '',
     };
 
-    const gapiScript = document.createElement('script');
+    const gsiScript = document.createElement('script');
 
-    gapiScript.src = 'https://apis.google.com/js/platform.js';
-    gapiScript.async = true;
-    gapiScript.defer = true;
+    gsiScript.src = 'https://accounts.google.com/gsi/client';
+    gsiScript.async = true;
+    gsiScript.defer = true;
 
-    document.body.appendChild(gapiScript);
+    document.body.appendChild(gsiScript);
 
-    gapiScript.addEventListener('load', () => {
-      console.log('gapi is ready');
+    gsiScript.addEventListener('load', () => {
+      console.log('gsi is ready', window.google);
 
-      window?.gapi?.load('auth2', () => {
-        /* Ready. Make a call to gapi.auth2.init or some other API */
-
-        window?.gapi?.auth2?.init({
+      window.google &&
+        window?.google.accounts.id.initialize({
           client_id: config.webClientId,
-          cookie_policy: 'none',
+          callback: handleCredentialResponse,
         });
 
-        this.GoogleAuth = window?.gapi?.auth2?.getAuthInstance();
-      });
+      window.google &&
+        window?.google.accounts.id.renderButton(
+          // @ts-ignore
+          document.getElementById('googleSignInButton'),
+          {theme: 'outline', size: 'large', width: 300}, // customization attributes
+        );
+      // window.google && window?.google?.accounts.id.prompt();
     });
   }
 
-  GoogleAuth: any;
   tokens: {
     idToken: string;
     accessToken: string;
   };
 
   async signIn(): Promise<{}> {
-    console.log('signIn');
-    await this?.GoogleAuth?.signIn({prompt: 'select_account'});
-
-    const user = this.GoogleAuth.currentUser.get();
-
-    const result = user.getAuthResponse(true);
-    this.tokens.idToken = result.id_token;
-    this.tokens.accessToken = result.access_token;
+    window.google && window?.google.accounts.id.prompt();
 
     return {};
   }
@@ -79,7 +79,6 @@ class GoogleSigninImpl {
   }
 
   signOut(): void {
-    this.GoogleAuth.signOut();
     console.log('should signout google');
   }
 }
@@ -94,3 +93,95 @@ export const statusCodes = {
 };
 
 export {};
+
+interface IdConfiguration {
+  client_id: string;
+  auto_select?: boolean;
+  callback: (handleCredentialResponse: CredentialResponse) => void;
+  login_uri?: string;
+  native_callback?: Function;
+  cancel_on_tap_outside?: boolean;
+  prompt_parent_id?: string;
+  nonce?: string;
+  context?: string;
+  state_cookie_domain?: string;
+  ux_mode?: 'popup' | 'redirect';
+  allowed_parent_origin?: string | string[];
+  intermediate_iframe_close_callback?: Function;
+}
+
+interface CredentialResponse {
+  credential?: string;
+  select_by?:
+    | 'auto'
+    | 'user'
+    | 'user_1tap'
+    | 'user_2tap'
+    | 'btn'
+    | 'btn_confirm'
+    | 'brn_add_session'
+    | 'btn_confirm_add_session';
+  clientId?: string;
+}
+
+interface GsiButtonConfiguration {
+  type: 'standard' | 'icon';
+  theme?: 'outline' | 'filled_blue' | 'filled_black';
+  size?: 'large' | 'medium' | 'small';
+  text?: 'signin_with' | 'signup_with' | 'continue_with';
+  shape?: 'rectangular' | 'pill' | 'circle' | 'square';
+  logo_alignment?: 'left' | 'center';
+  width?: string;
+  local?: string;
+}
+
+interface PromptMomentNotification {
+  isDisplayMoment: () => boolean;
+  isDisplayed: () => boolean;
+  isNotDisplayed: () => boolean;
+  getNotDisplayedReason: () =>
+    | 'browser_not_supported'
+    | 'invalid_client'
+    | 'missing_client_id'
+    | 'opt_out_or_no_session'
+    | 'secure_http_required'
+    | 'suppressed_by_user'
+    | 'unregistered_origin'
+    | 'unknown_reason';
+  isSkippedMoment: () => boolean;
+  getSkippedReason: () =>
+    | 'auto_cancel'
+    | 'user_cancel'
+    | 'tap_outside'
+    | 'issuing_failed';
+  isDismissedMoment: () => boolean;
+  getDismissedReason: () =>
+    | 'credential_returned'
+    | 'cancel_called'
+    | 'flow_restarted';
+  getMomentType: () => 'display' | 'skipped' | 'dismissed';
+}
+declare global {
+  interface Window {
+    google?: {
+      accounts: {
+        id: {
+          initialize: (input: IdConfiguration) => void;
+          prompt: (
+            momentListener?: (res: PromptMomentNotification) => void,
+          ) => void;
+          renderButton: (
+            parent: HTMLElement,
+            options: GsiButtonConfiguration,
+            clickHandler?: Function,
+          ) => void;
+          disableAutoSelect: Function;
+          storeCredential: Function;
+          cancel: () => void;
+          onGoogleLibraryLoad: Function;
+          revoke: Function;
+        };
+      };
+    };
+  }
+}

@@ -1,6 +1,6 @@
 import auth from '@react-native-firebase/auth';
 import {useContext, useEffect, useState} from 'react';
-import {Alert} from 'react-native';
+import {Alert, Platform} from 'react-native';
 import {FirebaseError} from '@firebase/util';
 import {
   GoogleSignin,
@@ -87,7 +87,9 @@ function Google(): JSX.Element | null {
     return null;
   }
 
-  return (
+  return Platform.OS === 'web' ? (
+    <div id="googleSignInButton" />
+  ) : (
     <ProviderButton loading={loading} onPress={handleGoogle} type="google">
       {title}
     </ProviderButton>
