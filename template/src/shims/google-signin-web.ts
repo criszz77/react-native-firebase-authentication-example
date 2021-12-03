@@ -6,13 +6,59 @@
 //   User
 // } from '../../node_modules/@react-native-google-signin/google-signin/src/types';
 
+// GAPI DEPRECATED: https://developers.google.com/identity/sign-in/web/sign-in
+
+import * as config from 'config.json';
+
 class GoogleSigninImpl {
   constructor() {
     console.log('GoogleSignin loaded in web mode.');
+
+    this.tokens = {
+      idToken: '',
+      accessToken: '',
+    };
+
+    const gapiScript = document.createElement('script');
+
+    gapiScript.src = 'https://apis.google.com/js/platform.js';
+    gapiScript.async = true;
+    gapiScript.defer = true;
+
+    document.body.appendChild(gapiScript);
+
+    gapiScript.addEventListener('load', () => {
+      console.log('gapi is ready');
+
+      window?.gapi?.load('auth2', () => {
+        /* Ready. Make a call to gapi.auth2.init or some other API */
+
+        window?.gapi?.auth2?.init({
+          client_id: config.webClientId,
+          cookie_policy: 'none',
+        });
+
+        this.GoogleAuth = window?.gapi?.auth2?.getAuthInstance();
+      });
+    });
   }
 
+  GoogleAuth: any;
+  tokens: {
+    idToken: string;
+    accessToken: string;
+  };
+
   async signIn(): Promise<{}> {
-    console.log('should do a google signin');
+    console.log('signIn');
+    await this?.GoogleAuth?.signIn({prompt: 'select_account'});
+
+    const user = this.GoogleAuth.currentUser.get();
+
+    const result = user.getAuthResponse(true);
+    this.tokens.idToken = result.id_token;
+    this.tokens.accessToken = result.access_token;
+
     return {};
   }
 
@@ -22,10 +68,8 @@ class GoogleSigninImpl {
   }
 
   async getTokens(): Promise<{idToken: string; accessToken: string}> {
-    return {
-      idToken: 'badidtoken',
-      accessToken: 'badaccesstoken',
-    };
+    console.log('tokens', this.tokens);
+    return this.tokens;
   }
 
   configure(options: {}): void {
@@ -35,6 +79,7 @@ class GoogleSigninImpl {
   }
 
   signOut(): void {
+    this.GoogleAuth.signOut();
     console.log('should signout google');
   }
 }
