@@ -1,0 +1,30 @@
+{
+  "files": {
+    "main.js": "https://criszz77.github.io/react-native-firebase-authentication-example/static/js/main.6854379f.chunk.js",
+    "main.js.map": "https://criszz77.github.io/react-native-firebase-authentication-example/static/js/main.6854379f.chunk.js.map",
+    "runtime-main.js": "https://criszz77.github.io/react-native-firebase-authentication-example/static/js/runtime-main.cc5bbf8b.js",
+    "runtime-main.js.map": "https://criszz77.github.io/react-native-firebase-authentication-example/static/js/runtime-main.cc5bbf8b.js.map",
+    "static/js/2.00cdd9e6.chunk.js": "https://criszz77.github.io/react-native-firebase-authentication-example/static/js/2.00cdd9e6.chunk.js",
+    "static/js/2.00cdd9e6.chunk.js.map": "https://criszz77.github.io/react-native-firebase-authentication-example/static/js/2.00cdd9e6.chunk.js.map",
+    "index.html": "https://criszz77.github.io/react-native-firebase-authentication-example/index.html",
+    "static/js/2.00cdd9e6.chunk.js.LICENSE.txt": "https://criszz77.github.io/react-native-firebase-authentication-example/static/js/2.00cdd9e6.chunk.js.LICENSE.txt",
+    "static/media/AntDesign.ttf": "https://criszz77.github.io/react-native-firebase-authentication-example/static/media/AntDesign.163adab9.ttf",
+    "static/media/Entypo.ttf": "https://criszz77.github.io/react-native-firebase-authentication-example/static/media/Entypo.a10f4124.ttf",
+    "static/media/EvilIcons.ttf": "https://criszz77.github.io/react-native-firebase-authentication-example/static/media/EvilIcons.699664b3.ttf",
+    "static/media/Feather.ttf": "https://criszz77.github.io/react-native-firebase-authentication-example/static/media/Feather.11cd1d79.ttf",
+    "static/media/FontAwesome.ttf": "https://criszz77.github.io/react-native-firebase-authentication-example/static/media/FontAwesome.1e59d233.ttf",
+    "static/media/Fontisto.ttf": "https://criszz77.github.io/react-native-firebase-authentication-example/static/media/Fontisto.c0edd688.ttf",
+    "static/media/Foundation.ttf": "https://criszz77.github.io/react-native-firebase-authentication-example/static/media/Foundation.c0cbb004.ttf",
+    "static/media/Ionicons.ttf": "https://criszz77.github.io/react-native-firebase-authentication-example/static/media/Ionicons.3517aeaa.ttf",
+    "static/media/MaterialCommunityIcons.ttf": "https://criszz77.github.io/react-native-firebase-authentication-example/static/media/MaterialCommunityIcons.a7629910.ttf",
+    "static/media/MaterialIcons.ttf": "https://criszz77.github.io/react-native-firebase-authentication-example/static/media/MaterialIcons.120b4c7b.ttf",
+    "static/media/Octicons.ttf": "https://criszz77.github.io/react-native-firebase-authentication-example/static/media/Octicons.31d353da.ttf",
+    "static/media/SimpleLineIcons.ttf": "https://criszz77.github.io/react-native-firebase-authentication-example/static/media/SimpleLineIcons.3ec13a24.ttf",
+    "static/media/Zocial.ttf": "https://criszz77.github.io/react-native-firebase-authentication-example/static/media/Zocial.5e415922.ttf"
+  },
+  "entrypoints": [
+    "static/js/runtime-main.cc5bbf8b.js",
+    "static/js/2.00cdd9e6.chunk.js",
+    "static/js/main.6854379f.chunk.js"
+  ]
+}
